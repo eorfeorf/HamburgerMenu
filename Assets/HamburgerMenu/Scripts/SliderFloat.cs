@@ -10,7 +10,7 @@ namespace HamburgerMenu.Scripts
         {
             value.Subscribe(x =>
             {
-                inputField.text = string.Format("{0:0.##}",value);
+                inputField.text = x.ToString("F2");
             }).AddTo(this);
             
             decrement.onClick.AsObservable().Subscribe(_ =>

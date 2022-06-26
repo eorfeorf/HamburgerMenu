@@ -8,7 +8,10 @@ namespace HamburgerMenu.Scripts
     {
         private void Start()
         {
-            value.Subscribe(x => { inputField.text = value.ToString(); }).AddTo(this);
+            value.Subscribe(x =>
+            {
+                inputField.text = x.ToString();
+            }).AddTo(this);
 
             decrement.onClick.AsObservable().Subscribe(_ =>
             {
