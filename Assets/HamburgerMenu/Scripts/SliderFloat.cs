@@ -10,7 +10,7 @@ namespace HamburgerMenu.Scripts
         {
             value.Subscribe(x =>
             {
-                inputField.text = string.Format("{0:F2}",value);
+                inputField.text = string.Format("{0:0.##}",value);
             }).AddTo(this);
             
             decrement.onClick.AsObservable().Subscribe(_ =>
@@ -25,7 +25,7 @@ namespace HamburgerMenu.Scripts
 
             inputField.onEndEdit.AsObservable().Subscribe(x =>
             {
-                EditEnd(value, x);
+                EditEnd(value, x, min, max);
             }).AddTo(this);
         }
         
@@ -54,7 +54,7 @@ namespace HamburgerMenu.Scripts
             return value;
         }
 
-        protected override ReactiveProperty<float> EditEnd(ReactiveProperty<float> value, string x)
+        protected override ReactiveProperty<float> EditEnd(ReactiveProperty<float> value, string x, float min, float max)
         {
             var tmp = Convert.ToSingle(x);
             value.Value = Mathf.Clamp(tmp, min, max);

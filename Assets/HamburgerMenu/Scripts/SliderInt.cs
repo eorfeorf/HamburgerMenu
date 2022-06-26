@@ -10,9 +10,18 @@ namespace HamburgerMenu.Scripts
         {
             value.Subscribe(x => { inputField.text = value.ToString(); }).AddTo(this);
 
-            decrement.onClick.AsObservable().Subscribe(_ => { Decrement(value, min, max, unit); }).AddTo(this);
-            increment.onClick.AsObservable().Subscribe(_ => { Increment(value, min, max, unit); }).AddTo(this);
-            inputField.onEndEdit.AsObservable().Subscribe(x => { EditEnd(value, x); }).AddTo(this);
+            decrement.onClick.AsObservable().Subscribe(_ =>
+            {
+                Decrement(value, min, max, unit);
+            }).AddTo(this);
+            increment.onClick.AsObservable().Subscribe(_ =>
+            {
+                Increment(value, min, max, unit);
+            }).AddTo(this);
+            inputField.onEndEdit.AsObservable().Subscribe(x =>
+            {
+                EditEnd(value, x, min, max);
+            }).AddTo(this);
         }
 
         public override IReactiveProperty<int> Initialize(string label, int value, int min, int max, int unit)
@@ -40,7 +49,7 @@ namespace HamburgerMenu.Scripts
             return value;
         }
 
-        protected override ReactiveProperty<int> EditEnd(ReactiveProperty<int> value, string x)
+        protected override ReactiveProperty<int> EditEnd(ReactiveProperty<int> value, string x, int min, int max)
         {
             var tmp = Convert.ToInt32(x);
             value.Value = Mathf.Clamp(tmp, min, max);

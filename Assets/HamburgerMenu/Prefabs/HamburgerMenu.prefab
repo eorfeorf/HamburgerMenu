@@ -673,10 +673,10 @@ MonoBehaviour:
   openButton: {fileID: 172395790778677584}
   closeButton: {fileID: 2230773120771382793}
   itemParent: {fileID: 6691900179408318229}
-  sliderIntPrefab: {fileID: 467906198, guid: 413f00992809a24449715ff32e8480f6, type: 3}
-  sliderFloatPrefab: {fileID: 100627465, guid: b1b7afddd3634d645a487f35e008f468, type: 3}
-  togglePrefab: {fileID: 7003250303713752778, guid: 6b0819595e343bc40af8daae43b8fcbf, type: 3}
-  dropdownPrefab: {fileID: 7597840372586680330, guid: 882b6706e9a61f846831b62492079788, type: 3}
+  sliderIntPrefab: {fileID: 179201705, guid: a8daa5634aa40624b9874474675819be, type: 3}
+  sliderFloatPrefab: {fileID: 896268834, guid: 2cc7802fbf896e946b8823aa51be429d, type: 3}
+  togglePrefab: {fileID: 49207904, guid: 96bd5190f18ca764eb3a98716a0c9053, type: 3}
+  dropdownPrefab: {fileID: 902502189, guid: 0dd9d7581f85189468e46be6aa761c6d, type: 3}
 --- !u!222 &4313465212819075275
 CanvasRenderer:
   m_ObjectHideFlags: 0
