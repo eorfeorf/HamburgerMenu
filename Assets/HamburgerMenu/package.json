@@ -1,0 +1,12 @@
+{
+    "name":"com.eorfeorf.HamburgerMenu",
+    "version": "1.0.0",
+    "displayName": "HamburgerMenu",
+    "description": "Very easy hamburger menu.",
+    "unity": "2021.3",
+    "license": "MIT",
+    "dependencies": {
+        "com.unity.textmeshpro": "3.0.6",
+        "com.neuecc.unirx": "7.1.0"
+    }
+}
