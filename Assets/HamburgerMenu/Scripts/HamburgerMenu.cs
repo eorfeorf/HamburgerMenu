@@ -11,11 +11,6 @@ namespace HamburgerMenu.Scripts
     public class HamburgerMenu : MonoBehaviour
     {
         [SerializeField]
-        private Button openButton;
-        [SerializeField]
-        private Button closeButton;
-
-        [SerializeField]
         private Transform itemParent;
         
         [Header("Prefabs")]
@@ -37,36 +32,28 @@ namespace HamburgerMenu.Scripts
 
         // メニューの要素のキャッシュ.
         private readonly List<GameObject> repository = new List<GameObject>();
+        private Transform parentTransform = null;
 
-        private void Start()
+        /// <summary>
+        /// 初期化関数
+        /// </summary>
+        /// <param name="parent"></param>
+        public void Initialize(Transform parent = null)
         {
-            openButton.OnClickAsObservable().Subscribe(_=>
-            {
-                onOpen.OnNext(Unit.Default);
-                ShowAll();
-                openButton.gameObject.SetActive(false);
-                closeButton.gameObject.SetActive(true);
-            }).AddTo(this);
-            closeButton.OnClickAsObservable().Subscribe(_=>
-            {
-                onClose.OnNext(Unit.Default);
-                HideAll();
-                openButton.gameObject.SetActive(true);
-                closeButton.gameObject.SetActive(false);
-            }).AddTo(this);
+            parentTransform = parent == null ? itemParent : parent;
         }
-        
+
         /// <summary>
         /// 全てのアイテムを表示.
         /// </summary>
-        private void ShowAll()
+        public void ShowAll()
         {
             repository.ForEach(x => x.SetActive(true));
         }
         /// <summary>
         /// 全てのアイテムを非表示.
         /// </summary>
-        private void HideAll()
+        public void HideAll()
         {
             repository.ForEach(x => x.SetActive(false));
         }
@@ -79,7 +66,7 @@ namespace HamburgerMenu.Scripts
         /// <param name="value"></param>
         public IObservable<int> AddSliderInt(string label, int value, int min, int max, int unit)
         {
-            return CreateItem(sliderIntPrefab, itemParent).Initialize(label, value, min, max, unit);
+            return CreateItem(sliderIntPrefab, parentTransform).Initialize(label, value, min, max, unit);
         }
 
         /// <summary>
@@ -88,7 +75,7 @@ namespace HamburgerMenu.Scripts
         /// <param name="value"></param>
         public IObservable<float> AddSliderFloat(string label, float value, float min, float max, float unit)
         {
-            return CreateItem(sliderFloatPrefab, itemParent).Initialize(label, value, min, max, unit);
+            return CreateItem(sliderFloatPrefab, parentTransform).Initialize(label, value, min, max, unit);
         }
         
         /// <summary>
@@ -97,9 +84,8 @@ namespace HamburgerMenu.Scripts
         /// <param name="value"></param>
         public IObservable<bool> AddToggle(string label, bool value)
         {
-            return CreateItem(togglePrefab, itemParent).Initialize(label, value);
+            return CreateItem(togglePrefab, parentTransform).Initialize(label, value);
         } 
-        #endregion
         
         /// <summary>
         /// Dropdown enum
@@ -110,7 +96,7 @@ namespace HamburgerMenu.Scripts
         /// <returns></returns>
         public IObservable<int> AddDropdown<T>(string label, int value) where T : Enum
         {
-            return CreateItem(dropdownPrefab, itemParent).Initialize<T>(label, value);
+            return CreateItem(dropdownPrefab, parentTransform).Initialize<T>(label, value);
         }
         
         /// <summary>
@@ -125,7 +111,7 @@ namespace HamburgerMenu.Scripts
         {
             if (0 <= defaultIndex && defaultIndex < value.Count)
             {
-                return CreateItem(dropdownPrefab, itemParent).Initialize(label, value, defaultIndex);
+                return CreateItem(dropdownPrefab, parentTransform).Initialize(label, value, defaultIndex);
             }
             throw new Exception("[HamburgerMenu] Invalid default index.");
         }
@@ -138,17 +124,16 @@ namespace HamburgerMenu.Scripts
         /// <returns></returns>
         public IObservable<string> AddTextField(string label, string value)
         {
-            return CreateItem(textFieldPrefab, itemParent).Initialize(label, value);
+            return CreateItem(textFieldPrefab, parentTransform).Initialize(label, value);
         }
         
-        #region private
+        #endregion
+        
         private T CreateItem<T>(T prefab, Transform parent) where T : MonoBehaviour
         {
             var obj = Instantiate(prefab, parent).GetComponent<T>();
             repository.Add(obj.gameObject);
             return obj;
         }
-        #endregion
-
     }
 }
