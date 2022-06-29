@@ -44,6 +44,7 @@ namespace Sample
             // hamburgerMenu.AddDropdown("list", list, 0);
             // hamburgerMenu.AddDropdown("array", ary, 0);
             // hamburgerMenu.AddDropdown("array2", ary2, 0);
+            // hamburgerMenu.AddTextField("Text", "test text");
         }
     }
 }

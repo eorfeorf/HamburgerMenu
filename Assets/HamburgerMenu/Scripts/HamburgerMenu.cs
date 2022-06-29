@@ -27,6 +27,8 @@ namespace HamburgerMenu.Scripts
         private Toggle togglePrefab;
         [SerializeField]
         private Dropdown dropdownPrefab;
+        [SerializeField]
+        private TextField textFieldPrefab;
 
         public IDisposable OnOpen(Action act) => onOpen.Subscribe(_ => act()).AddTo(this);
         private readonly Subject<Unit> onOpen = new Subject<Unit>();
@@ -126,6 +128,17 @@ namespace HamburgerMenu.Scripts
                 return CreateItem(dropdownPrefab, itemParent).Initialize(label, value, defaultIndex);
             }
             throw new Exception("[HamburgerMenu] Invalid default index.");
+        }
+        
+        /// <summary>
+        /// Text field
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public IObservable<string> AddTextField(string label, string value)
+        {
+            return CreateItem(textFieldPrefab, itemParent).Initialize(label, value);
         }
         
         #region private
