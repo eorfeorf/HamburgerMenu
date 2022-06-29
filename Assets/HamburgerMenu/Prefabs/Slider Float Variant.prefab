@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2053877982039147058, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
       propertyPath: m_Name
-      value: Slider Float
+      value: Slider Float Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2053877982039147059, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
       propertyPath: m_Pivot.x
@@ -94,6 +94,10 @@ PrefabInstance:
     - target: {fileID: 2053877982039147059, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2965432199218344239, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
+      propertyPath: m_Name
+      value: Contents
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1138d29304bca6e42a85209fb5635679, type: 3}

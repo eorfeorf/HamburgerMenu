@@ -14,7 +14,6 @@ namespace HamburgerMenu.Scripts
     
     public class ItemBase : MonoBehaviour
     {
-        [Header("Standard parts")]
         [SerializeField]
         protected StandardParts standardParts;
     }
