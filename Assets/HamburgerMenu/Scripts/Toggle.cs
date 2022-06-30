@@ -24,7 +24,6 @@ namespace HamburgerMenu.Scripts
         {
             value.Subscribe(flag =>
             {
-                Debug.Log($"toggle:{flag}");
                 onImage.gameObject.SetActive(flag);
             }).AddTo(this);
 
