@@ -13,16 +13,30 @@ namespace HamburgerMenu.Scripts
         [SerializeField]
         private TMP_Dropdown dropdown;
         
-        public IObservable<int> Initialize<T>(string label, int value) where T : Enum
+        /// <summary>
+        /// enumで初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="defaultValue"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IObservable<int> Initialize<T>(string label, int defaultValue) where T : Enum
         {
             standardParts.label.text = label;
             
             var names = Enum.GetNames(typeof(T));
             dropdown.AddOptions(names.ToList());
-            dropdown.value = value;
+            dropdown.value = defaultValue;
             return dropdown.onValueChanged.AsObservable();
         }
         
+        /// <summary>
+        /// ICollectionで初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="value"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public IObservable<int> Initialize(string label, ICollection value, int index)
         {
             standardParts.label.text = label;

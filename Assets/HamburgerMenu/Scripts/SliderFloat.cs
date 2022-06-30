@@ -4,9 +4,18 @@ using UnityEngine;
 
 namespace HamburgerMenu.Scripts
 {
-    public class SliderFloat : SliderBase<float>
+    public sealed class SliderFloat : SliderBase<float>
     {
-        private void Start()
+        /// <summary>
+        /// 初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        public override IReactiveProperty<float> Initialize(string label, float defaultValue, float min, float max, float unit)
         {
             value.Subscribe(x =>
             {
@@ -15,29 +24,25 @@ namespace HamburgerMenu.Scripts
             
             decrement.onClick.AsObservable().Subscribe(_ =>
             {
-                Decrement(value, min, max, unit);
+                Decrement(this.value, min, max, unit);
             }).AddTo(this);
            
             increment.onClick.AsObservable().Subscribe(_ =>
             {
-                Increment(value, min, max, unit);
+                Increment(this.value, min, max, unit);
             }).AddTo(this);
 
             inputField.onEndEdit.AsObservable().Subscribe(x =>
             {
-                EditEnd(value, x, min, max);
+                EditEnd(this.value, x, min, max);
             }).AddTo(this);
-        }
-        
-        public override IReactiveProperty<float> Initialize(string label, float value, float min, float max, float unit)
-        {
+            
             standardParts.label.text = label;
             this.min = min;
             this.max = max;
-            this.value.Value = Mathf.Clamp(value, min, max);
+            value.Value = Mathf.Clamp(defaultValue, min, max);
             this.unit = unit;
-
-            return this.value;
+            return value;
         }
 
         protected override ReactiveProperty<float> Decrement(ReactiveProperty<float> value, float min, float max, float unit)

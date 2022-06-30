@@ -9,8 +9,11 @@ namespace HamburgerMenu.Scripts
         [SerializeField]
         private UnityEngine.UI.Button button;
 
-        private ReactiveProperty<Unit> value = new ReactiveProperty<Unit>();
-
+        /// <summary>
+        /// 初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
         public IObservable<Unit> Initialize(string label)
         {
             standardParts.label.text = label;

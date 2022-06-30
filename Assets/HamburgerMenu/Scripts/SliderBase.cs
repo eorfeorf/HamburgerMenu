@@ -16,7 +16,7 @@ namespace HamburgerMenu.Scripts
         protected T max;
         protected T unit;
 
-        public abstract IReactiveProperty<T> Initialize(string label, T value, T min, T max, T unit);
+        public abstract IReactiveProperty<T> Initialize(string label, T defaultValue, T min, T max, T unit);
         protected abstract ReactiveProperty<T> Decrement(ReactiveProperty<T> value, T min, T max, T unit);
         protected abstract ReactiveProperty<T> Increment(ReactiveProperty<T> value, T min, T max, T unit);
         protected abstract ReactiveProperty<T> EditEnd(ReactiveProperty<T> value, string x, T min, T max);

@@ -4,9 +4,18 @@ using UnityEngine;
 
 namespace HamburgerMenu.Scripts
 {
-    public class SliderInt : SliderBase<int>
+    public sealed class SliderInt : SliderBase<int>
     {
-        private void Start()
+        /// <summary>
+        /// 初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        public override IReactiveProperty<int> Initialize(string label, int defaultValue, int min, int max, int unit)
         {
             value.Subscribe(x =>
             {
@@ -15,27 +24,23 @@ namespace HamburgerMenu.Scripts
 
             decrement.onClick.AsObservable().Subscribe(_ =>
             {
-                Decrement(value, min, max, unit);
+                Decrement(this.value, min, max, unit);
             }).AddTo(this);
             increment.onClick.AsObservable().Subscribe(_ =>
             {
-                Increment(value, min, max, unit);
+                Increment(this.value, min, max, unit);
             }).AddTo(this);
             inputField.onEndEdit.AsObservable().Subscribe(x =>
             {
-                EditEnd(value, x, min, max);
+                EditEnd(this.value, x, min, max);
             }).AddTo(this);
-        }
-
-        public override IReactiveProperty<int> Initialize(string label, int value, int min, int max, int unit)
-        {
+            
             standardParts.label.text = label;
             this.min = min;
             this.max = max;
-            this.value.Value = Mathf.Clamp(value, min, max);
+            value.Value = Mathf.Clamp(defaultValue, min, max);
             this.unit = unit;
-
-            return this.value;
+            return value;
         }
 
         protected override ReactiveProperty<int> Decrement(ReactiveProperty<int> value, int min, int max, int unit)

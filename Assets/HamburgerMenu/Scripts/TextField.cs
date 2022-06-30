@@ -12,7 +12,13 @@ namespace HamburgerMenu.Scripts
 
         private readonly ReactiveProperty<string> value = new StringReactiveProperty("");
 
-        public IObservable<string> Initialize(string label, string text)
+        /// <summary>
+        /// 初期化.
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="defaultText"></param>
+        /// <returns></returns>
+        public IObservable<string> Initialize(string label, string defaultText)
         {
             value.Subscribe(value =>
             {
@@ -25,7 +31,7 @@ namespace HamburgerMenu.Scripts
             }).AddTo(this);
             
             standardParts.label.text = label;
-            value.Value = text;
+            value.Value = defaultText;
             return value;
         }
     }

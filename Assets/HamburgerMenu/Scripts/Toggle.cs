@@ -1,5 +1,3 @@
-using System;
-using TMPro;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,17 +8,14 @@ namespace HamburgerMenu.Scripts
     {
         [SerializeField]
         private Button button;
-
         [SerializeField]
         private Image offImage;
-
         [SerializeField]
         private Image onImage;
         
-        
         private readonly ReactiveProperty<bool> value = new ReactiveProperty<bool>();
 
-        private void Start()
+        public ReactiveProperty<bool> Initialize(string label, bool defaultFlag)
         {
             value.Subscribe(flag =>
             {
@@ -31,12 +26,9 @@ namespace HamburgerMenu.Scripts
             {
                 value.Value = !value.Value;
             }).AddTo(this);
-        }
-
-        public ReactiveProperty<bool> Initialize(string label, bool flag)
-        {
+            
             standardParts.label.text = label;
-            value.Value = flag;
+            value.Value = defaultFlag;
             return value;
         }
     }
