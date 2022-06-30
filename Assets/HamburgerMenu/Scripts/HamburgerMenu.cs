@@ -24,6 +24,8 @@ namespace HamburgerMenu.Scripts
         private Dropdown dropdownPrefab;
         [SerializeField]
         private TextField textFieldPrefab;
+        [SerializeField]
+        private ButtonItem buttonPrefab;
 
         public IDisposable OnOpen(Action act) => onOpen.Subscribe(_ => act()).AddTo(this);
         private readonly Subject<Unit> onOpen = new Subject<Unit>();
@@ -127,11 +129,20 @@ namespace HamburgerMenu.Scripts
             return CreateItem(textFieldPrefab, parentTransform).Initialize(label, value);
         }
         
+        /// <summary>
+        /// Button
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public IObservable<Unit> AddButton(string label)
+        {
+            return CreateItem(buttonPrefab, parentTransform).Initialize(label);
+        }
         #endregion
         
         private T CreateItem<T>(T prefab, Transform parent) where T : MonoBehaviour
         {
-            var obj = Instantiate(prefab, parent).GetComponent<T>();
+            var obj = Instantiate(prefab, parent);
             repository.Add(obj.gameObject);
             return obj;
         }

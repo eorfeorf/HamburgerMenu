@@ -123,6 +123,7 @@ MonoBehaviour:
   togglePrefab: {fileID: 49207904, guid: 96bd5190f18ca764eb3a98716a0c9053, type: 3}
   dropdownPrefab: {fileID: 902502189, guid: 0dd9d7581f85189468e46be6aa761c6d, type: 3}
   textFieldPrefab: {fileID: 575804235, guid: 66c21cbf51fc26e4285973b60c6e9813, type: 3}
+  buttonPrefab: {fileID: -8385443158384216655, guid: 0358ed5f9a789ac4392443fd86534688, type: 3}
 --- !u!222 &4313465212819075275
 CanvasRenderer:
   m_ObjectHideFlags: 0
