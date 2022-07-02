@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2053877982039147058, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
       propertyPath: m_Name
-      value: Slider Int
+      value: Slider Int Variant
       objectReference: {fileID: 0}
     - target: {fileID: 2053877982039147059, guid: 1138d29304bca6e42a85209fb5635679, type: 3}
       propertyPath: m_Pivot.x
