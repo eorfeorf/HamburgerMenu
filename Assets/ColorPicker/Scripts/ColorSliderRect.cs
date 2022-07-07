@@ -1,5 +1,6 @@
 using System;
 using UniRx.Triggers;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace ColorPicker.Scripts
         private Image pointer;
 
         public RectTransform RectTransform { get; private set; }
+        public Material Material { get; private set; }
         public IObservable<PointerEventData> OnPointerClick;
         public IObservable<PointerEventData> OnPointerDrag;
 
@@ -20,6 +22,7 @@ namespace ColorPicker.Scripts
         private void Awake()
         {
             eventTrigger = gameObject.AddComponent<ObservableEventTrigger>();
+            Material = GetComponent<RawImage>().material;
 
             RectTransform = GetComponent<RectTransform>();
             OnPointerClick = eventTrigger.OnPointerClickAsObservable();

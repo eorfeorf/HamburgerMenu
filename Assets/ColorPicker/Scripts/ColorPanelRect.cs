@@ -13,6 +13,7 @@ namespace ColorPicker.Scripts
         private Image pointer;
 
         public RectTransform RectTransform { get; private set; }
+        public Material Material;
         public IObservable<PointerEventData> OnPointerClick;
         public IObservable<PointerEventData> OnPointerDrag;
 
@@ -21,6 +22,7 @@ namespace ColorPicker.Scripts
         private void Awake()
         {
             eventTrigger = gameObject.AddComponent<ObservableEventTrigger>();
+            Material = GetComponent<RawImage>().material;
 
             RectTransform = GetComponent<RectTransform>();
             OnPointerClick = eventTrigger.OnPointerClickAsObservable();

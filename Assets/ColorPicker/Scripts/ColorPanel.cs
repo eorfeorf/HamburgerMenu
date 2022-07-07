@@ -10,9 +10,10 @@ namespace ColorPicker.Scripts
     {
         [SerializeField]
         private ColorPanelRect rect;
-
         [SerializeField]
         private RectTransform pointer;
+
+        private static readonly int RGB = Shader.PropertyToID("_RGB");
 
         private void Start()
         {
@@ -30,6 +31,21 @@ namespace ColorPicker.Scripts
                 Debug.Log($"ColorPanel: ClickPosition={localPoint}");
                 Debug.Log($"ColorPanel: UV={uv}");
             }).AddTo(this);
+        }
+
+        public void Apply(Vector3 rgb)
+        {
+            ApplyRectMaterial(rgb);
+        }
+
+        private void ApplyRectMaterial(Vector3 rgb)
+        {
+            rect.Material.SetColor(RGB, new Color(rgb.x, rgb.y, rgb.z, 1f));
+        }
+
+        private void ApplyPointerPosition(Vector3 rgb)
+        {
+            
         }
     }
 }
