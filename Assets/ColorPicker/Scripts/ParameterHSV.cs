@@ -22,11 +22,14 @@ namespace ColorPicker.Scripts
         private TMP_InputField inputFieldV;
 
         public IReactiveProperty<float> OnEditH => onEditH;
-        private ReactiveProperty<float> onEditH => new ReactiveProperty<float>();
+        private ReactiveProperty<float> onEditH = new ReactiveProperty<float>();
         public IReactiveProperty<float> OnEditS => onEditS;
-        private ReactiveProperty<float> onEditS => new ReactiveProperty<float>();
+        private ReactiveProperty<float> onEditS = new ReactiveProperty<float>();
         public IReactiveProperty<float> OnEditV => onEditV;
-        private ReactiveProperty<float> onEditV => new ReactiveProperty<float>();
+        private ReactiveProperty<float> onEditV = new ReactiveProperty<float>();
+
+        // 入力してApplyが呼ばれた場合はテキストを更新しない.
+        private bool input = false;
 
         private void Start()
         {
@@ -37,11 +40,19 @@ namespace ColorPicker.Scripts
 
         private void Initialize(TMP_InputField inputField, ReactiveProperty<float> onEdit, int min, int max)
         {
+            // TODO:数値が空の時にonEndEditが呼ばれた場合０を入れるようにする
             Observable.Merge(inputField.onEndEdit.AsObservable(), inputField.onValueChanged.AsObservable()).Subscribe(value =>
             {
-                if (ColorPickerUtility.StringTo01(value, min, max, out var result))
+                // 数値か？.
+                if(int.TryParse(value, out var intValue))
                 {
-                    onEdit.Value = result;
+                    input = true;
+                    intValue = Mathf.Clamp(intValue, min, max);
+                    // Clampした結果を文字に反映.
+                    inputField.SetTextWithoutNotify(intValue.ToString());
+                    // 0~1.
+                    var value01 = (float)intValue / max;
+                    onEdit.Value = value01;
                 }
                 else
                 {
@@ -52,14 +63,20 @@ namespace ColorPicker.Scripts
         
         public void Apply(Vector3 rgb)
         {
+            if (input)
+            {
+                input = false;
+                return;
+            }
+            
             Color.RGBToHSV(new Color(rgb.x, rgb.y, rgb.z), out var h, out var s, out var v);
             var intH = (int) (h * ColorPickerDefine.HUE_MAX);
             var intS = (int) (s * ColorPickerDefine.SATURATION_MAX);
             int intV = (int) (v * ColorPickerDefine.VALUE_MAX);
 
-            inputFieldH.text = intH.ToString();
-            inputFieldS.text = intS.ToString();
-            inputFieldV.text = intV.ToString();
+            inputFieldH.SetTextWithoutNotify(intH.ToString());
+            inputFieldS.SetTextWithoutNotify(intS.ToString());
+            inputFieldV.SetTextWithoutNotify(intV.ToString());
         }
     }
 }

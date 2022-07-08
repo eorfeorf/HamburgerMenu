@@ -1,3 +1,4 @@
+using ColorPicker.Scripts.Common;
 using UniRx;
 using UnityEngine;
 
@@ -43,41 +44,52 @@ namespace ColorPicker.Scripts
                 rgb.x = value;
                 Apply(rgb);
             }).AddTo(this);
-            parameterRGB.OnEditG.SkipLatestValueOnSubscribe().Subscribe(value =>
+            parameterRGB.OnEditG.Subscribe(value =>
             {
                 rgb.y = value;
                 Apply(rgb);
             }).AddTo(this);
-            parameterRGB.OnEditB.SkipLatestValueOnSubscribe().Subscribe(value =>
+            parameterRGB.OnEditB.Subscribe(value =>
             {
                 rgb.z = value;
                 Apply(rgb);
             }).AddTo(this);
             
             // ParameterHSV
-            parameterHSV.OnEditH.SkipLatestValueOnSubscribe().Subscribe(value =>
+            parameterHSV.OnEditH.Subscribe(value =>
             {
-                rgb.x = value;
+                var hsv = rgb.ToColor().RGBToHSV();
+                hsv.x = value;
+                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
+                rgb = color.ToVector3();
                 Apply(rgb);
             }).AddTo(this);
-            parameterHSV.OnEditS.SkipLatestValueOnSubscribe().Subscribe(value =>
+            parameterHSV.OnEditS.Subscribe(value =>
             {
-                rgb.y = value;
+                var hsv = rgb.ToColor().RGBToHSV();
+                hsv.y = value;
+                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
+                rgb = color.ToVector3();
                 Apply(rgb);
             }).AddTo(this);
-            parameterHSV.OnEditV.SkipLatestValueOnSubscribe().Subscribe(value =>
+            parameterHSV.OnEditV.Subscribe(value =>
             {
-                rgb.z = value;
+                var hsv = rgb.ToColor().RGBToHSV();
+                hsv.z = value;
+                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
+                rgb = color.ToVector3();
                 Apply(rgb);
             }).AddTo(this);
             
             // ColorPanel
             
             // ColorSlider
-            colorSlider.Hue01.SkipLatestValueOnSubscribe().Subscribe(hue =>
+            colorSlider.Hue01.Subscribe(hue =>
             {
-                var color = Color.HSVToRGB(hue, 1f, 1f);
-                //colorPanel.Apply(new Vector3(color.r, color.g, color.b));
+                var hsv = rgb.ToColor().RGBToHSV();
+                var color = Color.HSVToRGB(hue, hsv.y, hsv.z);
+                rgb = color.ToVector3();
+                Apply(rgb);
             }).AddTo(this);
         }
 

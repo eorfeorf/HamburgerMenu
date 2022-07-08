@@ -46,10 +46,27 @@ namespace ColorPicker.Scripts
             result = 0f;
             return false;
         }
-        
-        public static float Remap(float value, float from1, float to1, float from2, float to2)
+
+        /// <summary>
+        /// 数値文字列をclamp.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool ClampString(string text, int min, int max, out string result)
         {
-            return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+            if (int.TryParse(text, out var output))
+            {
+                var value = int.Parse(text);
+                value = Mathf.Clamp(value, min, max);
+                result = value.ToString();
+                return true;
+            }
+
+            result = text;
+            return false;
         }
     }
 }

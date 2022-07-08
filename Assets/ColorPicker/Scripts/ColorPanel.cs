@@ -1,4 +1,5 @@
 using System;
+using ColorPicker.Scripts.Common;
 using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -40,7 +41,8 @@ namespace ColorPicker.Scripts
 
         private void ApplyRectMaterial(Vector3 rgb)
         {
-            rect.Material.SetColor(RGB, new Color(rgb.x, rgb.y, rgb.z, 1f));
+            var color = rgb.ToColor();
+            rect.Material.SetColor(RGB, color);
         }
 
         private void ApplyPointerPosition(Vector3 rgb)

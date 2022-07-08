@@ -1,3 +1,4 @@
+using ColorPicker.Scripts.Common;
 using UniRx;
 using UnityEngine;
 
@@ -48,9 +49,7 @@ namespace ColorPicker.Scripts
         {
             var rc = rect.RectTransform.rect;
             Color.RGBToHSV(new Color(rgb.x, rgb.y, rgb.z), out var h, out _, out _);
-            // 0 のとき 100
-            // 1 のとき -100
-            var height = ColorPickerUtility.Remap(h, 0f, 1f, -100, 100);
+            var height = h.Remap(0f, 1f, -100, 100);
             pointer.localPosition = new Vector3(pointer.localPosition.x, height, pointer.localPosition.z);
         }
     }
