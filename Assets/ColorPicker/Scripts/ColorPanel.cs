@@ -14,8 +14,11 @@ namespace ColorPicker.Scripts
         [SerializeField]
         private RectTransform pointer;
 
-        private static readonly int RGB = Shader.PropertyToID("_RGB");
+        public IReadOnlyReactiveProperty<Vector2> SV01 => sv;
+        private ReactiveProperty<Vector2> sv = new ReactiveProperty<Vector2>();
 
+        private static readonly int RGB = Shader.PropertyToID("_RGB");
+        
         private void Start()
         {
             Observable.Merge(rect.OnPointerClick, rect.OnPointerDrag).Subscribe(data =>
@@ -24,19 +27,29 @@ namespace ColorPicker.Scripts
                 localPoint.x = Mathf.Clamp(localPoint.x, rect.RectTransform.rect.xMin, rect.RectTransform.rect.xMax);
                 localPoint.y = Mathf.Clamp(localPoint.y, rect.RectTransform.rect.yMin, rect.RectTransform.rect.yMax);
                 
+                // ポインタ位置更新.
                 pointer.localPosition = localPoint;
+                Debug.Log($"ColorPanel: ClickPosition={localPoint}");
+                 
+                // 色を取得. 
+                var s = localPoint.x.Remap(rect.RectTransform.rect.xMin, rect.RectTransform.rect.xMax, 0f, 1f);
+                var v = localPoint.y.Remap(rect.RectTransform.rect.yMin, rect.RectTransform.rect.yMax, 0f, 1f);
+                sv.Value = new Vector2(s, v);
 
                 // 真ん中が0なので半分を底上げ
-                Vector2 uv = ColorPickerUtility.GetLocalPoint01(localPoint, rect.RectTransform);
-
-                Debug.Log($"ColorPanel: ClickPosition={localPoint}");
-                Debug.Log($"ColorPanel: UV={uv}");
+                //Vector2 uv = ColorPickerUtility.GetLocalPoint01(localPoint, rect.RectTransform);
+                //Debug.Log($"ColorPanel: UV={uv}");
+                
+                
             }).AddTo(this);
         }
 
+        // TODO:HSVのほうが楽.
         public void Apply(Vector3 rgb)
         {
             ApplyRectMaterial(rgb);
+            // TODO:HSVのほうが良いかも.            
+            ApplyPointerPosition(rgb);
         }
 
         private void ApplyRectMaterial(Vector3 rgb)

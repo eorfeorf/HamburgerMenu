@@ -13,7 +13,7 @@ namespace ColorPicker.Scripts
         private Image pointer;
 
         public RectTransform RectTransform { get; private set; }
-        public Material Material;
+        public Material Material { get; set; }
         public IObservable<PointerEventData> OnPointerClick;
         public IObservable<PointerEventData> OnPointerDrag;
 

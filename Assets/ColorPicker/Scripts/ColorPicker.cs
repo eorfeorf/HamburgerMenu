@@ -93,6 +93,14 @@ namespace ColorPicker.Scripts
             }).AddTo(this);
             
             // ColorPanel
+            colorPanel.SV01.Subscribe(sv =>
+            {
+                var hsv = rgb.ToColor().RGBToHSV();
+                hsv = new Vector3(hsv.x, sv.x, sv.y);
+                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
+                rgb = color.ToVector3();
+                ApplyOnChanged(rgb, colorPanel, colorSlider);
+            }).AddTo(this);
         }
 
         private void ApplyOnChanged(Vector3 rgb, Object excludeField1, Object excludeField2 = null)
