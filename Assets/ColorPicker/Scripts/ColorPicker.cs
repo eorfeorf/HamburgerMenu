@@ -1,6 +1,8 @@
+using System;
 using ColorPicker.Scripts.Common;
 using UniRx;
 using UnityEngine;
+using Object = System.Object;
 
 namespace ColorPicker.Scripts
 {
@@ -42,17 +44,17 @@ namespace ColorPicker.Scripts
             parameterRGB.OnEditR.Subscribe(value =>
             {
                 rgb.x = value;
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterRGB);
             }).AddTo(this);
             parameterRGB.OnEditG.Subscribe(value =>
             {
                 rgb.y = value;
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterRGB);
             }).AddTo(this);
             parameterRGB.OnEditB.Subscribe(value =>
             {
                 rgb.z = value;
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterRGB);
             }).AddTo(this);
             
             // ParameterHSV
@@ -62,7 +64,7 @@ namespace ColorPicker.Scripts
                 hsv.x = value;
                 var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
                 rgb = color.ToVector3();
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterHSV);
             }).AddTo(this);
             parameterHSV.OnEditS.Subscribe(value =>
             {
@@ -70,7 +72,7 @@ namespace ColorPicker.Scripts
                 hsv.y = value;
                 var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
                 rgb = color.ToVector3();
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterHSV);
             }).AddTo(this);
             parameterHSV.OnEditV.Subscribe(value =>
             {
@@ -78,28 +80,73 @@ namespace ColorPicker.Scripts
                 hsv.z = value;
                 var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
                 rgb = color.ToVector3();
-                Apply(rgb);
+                ApplyOnChanged(rgb, parameterHSV);
             }).AddTo(this);
-            
-            // ColorPanel
             
             // ColorSlider
             colorSlider.Hue01.Subscribe(hue =>
             {
-                var hsv = rgb.ToColor().RGBToHSV();
-                var color = Color.HSVToRGB(hue, hsv.y, hsv.z);
+                var color = Color.HSVToRGB(hue, parameterHSV.OnEditS.Value, parameterHSV.OnEditV.Value);
                 rgb = color.ToVector3();
-                Apply(rgb);
+                ApplyOnChanged(rgb, colorSlider, parameterHSV);
+                parameterHSV.ApplyHue(hue);
             }).AddTo(this);
+            
+            // ColorPanel
         }
 
-        private void Apply(Vector3 rgb)
+        private void ApplyOnChanged(Vector3 rgb, Object excludeField1, Object excludeField2 = null)
         {
-            parameterRGB.Apply(rgb);
-            parameterHSV.Apply(rgb);
-            colorPanel.Apply(rgb);
-            colorSlider.Apply(rgb);
-            colorViewer.ApplyNewColor(rgb);
+            var exclude = false;
+            
+            if(!IsExcludeType(typeof(ParameterRGB), excludeField1, excludeField2) )
+            {
+                parameterRGB.Apply(rgb);   
+            }
+            if(!IsExcludeType(typeof(ParameterHSV), excludeField1, excludeField2))
+            {
+                parameterHSV.Apply(rgb);   
+            }
+            if (!IsExcludeType(typeof(ColorPanel), excludeField1, excludeField2))
+            {
+                colorPanel.Apply(rgb);
+            }
+            if (!IsExcludeType(typeof(ColorSlider), excludeField1, excludeField2))
+            {
+                colorSlider.Apply(rgb);
+            }
+            if (!IsExcludeType(typeof(ColorViewer), excludeField1, excludeField2))
+            {
+                colorViewer.ApplyNewColor(rgb);
+            }
+        }
+        
+        private bool IsExcludeType(Type excludeType, Object field1, Object field2 = null)
+        {
+            if (excludeType == null)
+            {
+                return false;
+            }
+
+            if (field1 != null)
+            {
+                var fieldType = field1.GetType();
+                if (excludeType == fieldType)
+                {
+                    return true;
+                }   
+            }
+
+            if (field2 != null)
+            {
+                var field2Type = field2.GetType();
+                if (excludeType == field2Type)
+                {
+                    return true;
+                }   
+            }
+
+            return false;
         }
     }
 }

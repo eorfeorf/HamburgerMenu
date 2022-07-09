@@ -40,5 +40,5 @@ Material:
     m_Floats: []
     m_Colors:
     - _HSV: {r: 0, g: 0, b: 0, a: 0}
-    - _RGB: {r: 0, g: 1, b: 0, a: 1}
+    - _RGB: {r: 0.019199999, g: 0.019466667, b: 0.02, a: 1}
   m_BuildTextureStacks: []

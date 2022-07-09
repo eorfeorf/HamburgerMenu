@@ -78,5 +78,11 @@ namespace ColorPicker.Scripts
             inputFieldS.SetTextWithoutNotify(intS.ToString());
             inputFieldV.SetTextWithoutNotify(intV.ToString());
         }
+
+        public void ApplyHue(float hue)
+        {
+            var intH = (int) (hue * ColorPickerDefine.HUE_MAX);
+            inputFieldH.SetTextWithoutNotify(intH.ToString());
+        }
     }
 }
