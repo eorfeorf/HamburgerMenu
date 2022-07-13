@@ -76,9 +76,8 @@ namespace ColorPicker.Scripts
         /// H適用.
         /// </summary>
         /// <param name="h"></param>
-        public void ApplyH(float h)
+        private void ApplyH(float h)
         {
-            //onEditH.Value = h;
             ApplyText(h, inputFieldH, ColorPickerDefine.H_MAX);
         }
 
@@ -86,9 +85,8 @@ namespace ColorPicker.Scripts
         /// S適用.
         /// </summary>
         /// <param name="s"></param>
-        public void ApplyS(float s)
+        private void ApplyS(float s)
         {
-            //onEditS.Value = s;
             ApplyText(s, inputFieldS, ColorPickerDefine.S_MAX);
         }
         
@@ -96,9 +94,8 @@ namespace ColorPicker.Scripts
         /// V適用.
         /// </summary>
         /// <param name="v"></param>
-        public void ApplyV(float v)
+        private void ApplyV(float v)
         {
-            //onEditV.Value = v;
             ApplyText(v, inputFieldV, ColorPickerDefine.V_MAX);
         }
         

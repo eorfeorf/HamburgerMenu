@@ -20,25 +20,14 @@ namespace ColorPicker.Scripts
         private ParameterHSV parameterHSV;
 
         // 外部用の最終的に決まった色.
-        public IReactiveProperty<Color> FixColor => fixColor;
-        private ReactiveProperty<Color> fixColor = new ReactiveProperty<Color>(Color.white);
-
-        private Vector3 hsv;
+        public IReadOnlyReactiveProperty<Color> FixColor => fixColor;
+        private ReactiveProperty<Color> fixColor = new ReactiveProperty<Color>();
+    
+        private Vector3 hsv = Vector3.one;
         private float alpha;
-
-        private void Awake()
-        {
-            FixColor.Subscribe(x =>
-            {
-                Debug.Log(x);
-            }).AddTo(this);
-        }
-
+        
         private void Start()
         {
-            // 相互で変わるもの.
-            // parameterRGB,parameterHSV,colorPanel,colorSlider,colorViewer
-            
             //
             // ParameterRGB
             //
@@ -108,6 +97,11 @@ namespace ColorPicker.Scripts
             
         }
 
+        private void ApplyFixColor(Vector3 hsv)
+        {
+            fixColor.Value = hsv.ToColor();
+        }
+
         private void ApplyOnChangedParameterRGB(Color color)
         {
             var hsv = color.RGBToHSV();
@@ -115,6 +109,7 @@ namespace ColorPicker.Scripts
             colorPanel.Apply(hsv);
             colorSlider.Apply(hsv.x);
             parameterHSV.Apply(hsv);
+            ApplyFixColor(hsv);
         }
 
         private void ApplyOnChangedParameterHSV(Vector3 hsv)
@@ -123,7 +118,8 @@ namespace ColorPicker.Scripts
             colorViewer.ApplyNewColor(color);
             colorPanel.Apply(hsv);
             colorSlider.Apply(hsv.x);
-            parameterRGB.Apply(color);   
+            parameterRGB.Apply(color);
+            ApplyFixColor(hsv);
         }
 
         private void ApplyOnChangedColorPanel(Vector3 hsv)
@@ -132,6 +128,7 @@ namespace ColorPicker.Scripts
             colorViewer.ApplyNewColor(color);
             parameterRGB.Apply(color);
             parameterHSV.Apply(hsv);
+            ApplyFixColor(hsv);
         }
 
         private void ApplyOnChangedColorSlider(Vector3 hsv)
@@ -141,6 +138,7 @@ namespace ColorPicker.Scripts
             colorPanel.Apply(hsv);
             parameterRGB.Apply(color);
             parameterHSV.Apply(hsv);
+            ApplyFixColor(hsv);
         }
     }
 }

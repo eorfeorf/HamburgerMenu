@@ -64,9 +64,8 @@ namespace ColorPicker.Scripts
         /// R適用.
         /// </summary>
         /// <param name="r"></param>
-        public void ApplyR(float r)
+        private void ApplyR(float r)
         {
-            //onEditR.Value = r;
             ApplyText(r, inputFieldR, ColorPickerDefine.RGB_MAX);
         }
 
@@ -74,9 +73,8 @@ namespace ColorPicker.Scripts
         /// G適用.
         /// </summary>
         /// <param name="g"></param>
-        public void ApplyG(float g)
+        private void ApplyG(float g)
         {
-            //onEditG.Value = g;
             ApplyText(g, inputFieldG, ColorPickerDefine.RGB_MAX);
         }
         
@@ -84,9 +82,8 @@ namespace ColorPicker.Scripts
         /// B適用
         /// </summary>
         /// <param name="b"></param>
-        public void ApplyB(float b)
+        private void ApplyB(float b)
         {
-            //onEditB.Value = b;
             ApplyText(b, inputFieldB, ColorPickerDefine.RGB_MAX);
         }
 
