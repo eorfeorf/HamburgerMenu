@@ -1,5 +1,3 @@
-using System;
-using System.Globalization;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -28,31 +26,33 @@ namespace ColorPicker.Scripts
         public IReactiveProperty<float> OnEditV => onEditV;
         private ReactiveProperty<float> onEditV = new ReactiveProperty<float>();
 
-        // 入力してApplyが呼ばれた場合はテキストを更新しない.
-        private bool input = false;
-
         private void Start()
         {
-            Initialize(inputFieldH, onEditH, ColorPickerDefine.HUE_MIN, ColorPickerDefine.HUE_MAX);
-            Initialize(inputFieldS, onEditS, ColorPickerDefine.SATURATION_MIN, ColorPickerDefine.SATURATION_MAX);
-            Initialize(inputFieldV, onEditV, ColorPickerDefine.VALUE_MIN, ColorPickerDefine.VALUE_MAX);
+            Initialize(inputFieldH, onEditH, ColorPickerDefine.H_MIN, ColorPickerDefine.H_MAX);
+            Initialize(inputFieldS, onEditS, ColorPickerDefine.S_MIN, ColorPickerDefine.S_MAX);
+            Initialize(inputFieldV, onEditV, ColorPickerDefine.V_MIN, ColorPickerDefine.V_MAX);
         }
 
         private void Initialize(TMP_InputField inputField, ReactiveProperty<float> onEdit, int min, int max)
         {
+            onEdit.Subscribe(value =>
+            {
+                value = Mathf.Clamp01(value);
+                // 文字列に反映.
+                var intValue = value * max;
+                inputField.SetTextWithoutNotify(intValue.ToString());
+            }).AddTo(this);
+            
             // TODO:数値が空の時にonEndEditが呼ばれた場合０を入れるようにする
             Observable.Merge(inputField.onEndEdit.AsObservable(), inputField.onValueChanged.AsObservable()).Subscribe(value =>
             {
                 // 数値か？.
                 if(int.TryParse(value, out var intValue))
                 {
-                    input = true;
                     intValue = Mathf.Clamp(intValue, min, max);
-                    // Clampした結果を文字に反映.
-                    inputField.SetTextWithoutNotify(intValue.ToString());
                     // 0~1.
                     var value01 = (float)intValue / max;
-                    onEdit.Value = value01;
+                    onEdit.SetValueAndForceNotify(value01);
                 }
                 else
                 {
@@ -61,28 +61,53 @@ namespace ColorPicker.Scripts
             }).AddTo(this);
         }
         
-        public void Apply(Vector3 rgb)
+        /// <summary>
+        /// 一括適用.
+        /// </summary>
+        /// <param name="rgb"></param>
+        public void Apply(Vector3 hsv)
         {
-            if (input)
-            {
-                input = false;
-                return;
-            }
-            
-            Color.RGBToHSV(new Color(rgb.x, rgb.y, rgb.z), out var h, out var s, out var v);
-            var intH = (int) (h * ColorPickerDefine.HUE_MAX);
-            var intS = (int) (s * ColorPickerDefine.SATURATION_MAX);
-            int intV = (int) (v * ColorPickerDefine.VALUE_MAX);
-
-            inputFieldH.SetTextWithoutNotify(intH.ToString());
-            inputFieldS.SetTextWithoutNotify(intS.ToString());
-            inputFieldV.SetTextWithoutNotify(intV.ToString());
+            ApplyH(hsv.x);
+            ApplyS(hsv.y);
+            ApplyV(hsv.z);
         }
 
-        public void ApplyHue(float hue)
+        /// <summary>
+        /// H適用.
+        /// </summary>
+        /// <param name="h"></param>
+        public void ApplyH(float h)
         {
-            var intH = (int) (hue * ColorPickerDefine.HUE_MAX);
-            inputFieldH.SetTextWithoutNotify(intH.ToString());
+            //onEditH.Value = h;
+            ApplyText(h, inputFieldH, ColorPickerDefine.H_MAX);
+        }
+
+        /// <summary>
+        /// S適用.
+        /// </summary>
+        /// <param name="s"></param>
+        public void ApplyS(float s)
+        {
+            //onEditS.Value = s;
+            ApplyText(s, inputFieldS, ColorPickerDefine.S_MAX);
+        }
+        
+        /// <summary>
+        /// V適用.
+        /// </summary>
+        /// <param name="v"></param>
+        public void ApplyV(float v)
+        {
+            //onEditV.Value = v;
+            ApplyText(v, inputFieldV, ColorPickerDefine.V_MAX);
+        }
+        
+        private void ApplyText(float value, TMP_InputField inputField, int max)
+        {
+            value = Mathf.Clamp01(value);
+            // 文字列に反映.
+            var intValue = (int)(value * max);
+            inputField.SetTextWithoutNotify(intValue.ToString());
         }
     }
 }

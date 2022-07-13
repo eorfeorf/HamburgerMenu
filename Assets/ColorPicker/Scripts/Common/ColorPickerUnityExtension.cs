@@ -1,3 +1,4 @@
+using UniRx;
 using UnityEngine;
 
 namespace ColorPicker.Scripts.Common
@@ -9,11 +10,6 @@ namespace ColorPicker.Scripts.Common
             return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
         }
 
-        public static Color ToColor(this Vector3 value)
-        {
-            return new Color(value.x, value.y, value.z);
-        }
-
         public static Vector3 ToVector3(this Color value)
         {
             return new Vector3(value.r, value.g, value.b);
@@ -23,6 +19,16 @@ namespace ColorPicker.Scripts.Common
         {
             Color.RGBToHSV(value, out var h, out var s, out var v);
             return new Vector3(h, s, v);
+        }
+
+        public static Color ToColor(this Vector3 value)
+        {
+            return Color.HSVToRGB(value.x, value.y, value.z);
+        }
+
+        public static Vector3 ToHSV(this Color value)
+        {
+            return value.RGBToHSV();
         }
     }
 }

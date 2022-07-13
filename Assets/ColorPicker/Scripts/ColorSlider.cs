@@ -45,11 +45,10 @@ namespace ColorPicker.Scripts
             return localPoint;
         }
 
-        public void Apply(Vector3 rgb)
+        public void Apply(float hue)
         {
             var rc = rect.RectTransform.rect;
-            Color.RGBToHSV(new Color(rgb.x, rgb.y, rgb.z), out var h, out _, out _);
-            var height = h.Remap(0f, 1f, -100, 100);
+            var height = hue.Remap(0f, 1f, rc.yMin, rc.yMax);
             pointer.localPosition = new Vector3(pointer.localPosition.x, height, pointer.localPosition.z);
         }
     }

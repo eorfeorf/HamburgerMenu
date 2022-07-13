@@ -17,15 +17,13 @@ namespace ColorPicker.Scripts
         public IReadOnlyReactiveProperty<Vector2> SV01 => sv;
         private ReactiveProperty<Vector2> sv = new ReactiveProperty<Vector2>();
 
-        private static readonly int RGB = Shader.PropertyToID("_RGB");
+        private static readonly int Hue = Shader.PropertyToID("_Hue");
         
         private void Start()
         {
             Observable.Merge(rect.OnPointerClick, rect.OnPointerDrag).Subscribe(data =>
             {
                 var localPoint = ColorPickerUtility.GetLocalPoint(data.position, rect.RectTransform);
-                localPoint.x = Mathf.Clamp(localPoint.x, rect.RectTransform.rect.xMin, rect.RectTransform.rect.xMax);
-                localPoint.y = Mathf.Clamp(localPoint.y, rect.RectTransform.rect.yMin, rect.RectTransform.rect.yMax);
                 
                 // ポインタ位置更新.
                 pointer.localPosition = localPoint;
@@ -44,23 +42,25 @@ namespace ColorPicker.Scripts
             }).AddTo(this);
         }
 
-        // TODO:HSVのほうが楽.
-        public void Apply(Vector3 rgb)
+        public void Apply(Vector3 hsv)
         {
-            ApplyRectMaterial(rgb);
-            // TODO:HSVのほうが良いかも.            
-            ApplyPointerPosition(rgb);
+            ApplyRectMaterial(hsv.x);
+            ApplyPointerPosition(hsv);
         }
 
-        private void ApplyRectMaterial(Vector3 rgb)
+        private void ApplyRectMaterial(float h)
         {
-            var color = rgb.ToColor();
-            rect.Material.SetColor(RGB, color);
+            rect.Material.SetFloat(Hue, h);
         }
 
-        private void ApplyPointerPosition(Vector3 rgb)
+        private void ApplyPointerPosition(Vector3 hsv)
         {
-            
+            var x = hsv.y;
+            var y = hsv.z;
+            var rc = rect.RectTransform.rect;
+            x = x.Remap(0f, 1f, rc.xMin, rc.xMax);
+            y = y.Remap(0f, 1f, rc.yMin, rc.yMax);
+            pointer.localPosition = new Vector3(x, y, pointer.localPosition.z);
         }
     }
 }

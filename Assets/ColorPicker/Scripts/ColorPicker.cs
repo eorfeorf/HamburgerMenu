@@ -22,12 +22,8 @@ namespace ColorPicker.Scripts
         // 外部用の最終的に決まった色.
         public IReactiveProperty<Color> FixColor => fixColor;
         private ReactiveProperty<Color> fixColor = new ReactiveProperty<Color>(Color.white);
-        
-        // ほぼテンポラリなので生データでよい.
-        // 一方的に変わるもの. 新しい色
-        // 相互で変わるもの. rgb,hsv,colorPanel,colorSlider
-        private Vector3 rgb;
-      
+
+        private Vector3 hsv;
         private float alpha;
 
         private void Awake()
@@ -40,121 +36,111 @@ namespace ColorPicker.Scripts
 
         private void Start()
         {
+            // 相互で変わるもの.
+            // parameterRGB,parameterHSV,colorPanel,colorSlider,colorViewer
+            
+            //
             // ParameterRGB
+            //
             parameterRGB.OnEditR.Subscribe(value =>
             {
-                rgb.x = value;
-                ApplyOnChanged(rgb, parameterRGB);
+                var rgb = hsv.ToColor();
+                rgb.r = value;
+                hsv = rgb.ToHSV();
+                ApplyOnChangedParameterRGB(rgb);
             }).AddTo(this);
             parameterRGB.OnEditG.Subscribe(value =>
             {
-                rgb.y = value;
-                ApplyOnChanged(rgb, parameterRGB);
+                var rgb = hsv.ToColor();
+                rgb.g = value;
+                hsv = rgb.ToHSV();
+                ApplyOnChangedParameterRGB(rgb);
             }).AddTo(this);
             parameterRGB.OnEditB.Subscribe(value =>
             {
-                rgb.z = value;
-                ApplyOnChanged(rgb, parameterRGB);
+                var rgb = hsv.ToColor();
+                rgb.b = value;
+                hsv = rgb.ToHSV();
+                ApplyOnChangedParameterRGB(rgb);
             }).AddTo(this);
             
+            //
             // ParameterHSV
+            //
             parameterHSV.OnEditH.Subscribe(value =>
             {
-                var hsv = rgb.ToColor().RGBToHSV();
                 hsv.x = value;
-                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
-                rgb = color.ToVector3();
-                ApplyOnChanged(rgb, parameterHSV);
+                ApplyOnChangedParameterHSV(hsv);
             }).AddTo(this);
             parameterHSV.OnEditS.Subscribe(value =>
             {
-                var hsv = rgb.ToColor().RGBToHSV();
                 hsv.y = value;
-                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
-                rgb = color.ToVector3();
-                ApplyOnChanged(rgb, parameterHSV);
+                ApplyOnChangedParameterHSV(hsv);
             }).AddTo(this);
             parameterHSV.OnEditV.Subscribe(value =>
             {
-                var hsv = rgb.ToColor().RGBToHSV();
                 hsv.z = value;
-                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
-                rgb = color.ToVector3();
-                ApplyOnChanged(rgb, parameterHSV);
+                ApplyOnChangedParameterHSV(hsv);
             }).AddTo(this);
             
-            // ColorSlider
-            colorSlider.Hue01.Subscribe(hue =>
-            {
-                var color = Color.HSVToRGB(hue, parameterHSV.OnEditS.Value, parameterHSV.OnEditV.Value);
-                rgb = color.ToVector3();
-                ApplyOnChanged(rgb, colorSlider, parameterHSV);
-                parameterHSV.ApplyHue(hue);
-            }).AddTo(this);
-            
+            //
             // ColorPanel
+            //
             colorPanel.SV01.Subscribe(sv =>
             {
-                var hsv = rgb.ToColor().RGBToHSV();
-                hsv = new Vector3(hsv.x, sv.x, sv.y);
-                var color = Color.HSVToRGB(hsv.x, hsv.y, hsv.z);
-                rgb = color.ToVector3();
-                ApplyOnChanged(rgb, colorPanel, colorSlider);
+                hsv.y = sv.x;
+                hsv.z = sv.y;
+                ApplyOnChangedColorPanel(hsv);
             }).AddTo(this);
-        }
-
-        private void ApplyOnChanged(Vector3 rgb, Object excludeField1, Object excludeField2 = null)
-        {
-            var exclude = false;
             
-            if(!IsExcludeType(typeof(ParameterRGB), excludeField1, excludeField2) )
+            //
+            // ColorSlider
+            //
+            colorSlider.Hue01.Subscribe(hue =>
             {
-                parameterRGB.Apply(rgb);   
-            }
-            if(!IsExcludeType(typeof(ParameterHSV), excludeField1, excludeField2))
-            {
-                parameterHSV.Apply(rgb);   
-            }
-            if (!IsExcludeType(typeof(ColorPanel), excludeField1, excludeField2))
-            {
-                colorPanel.Apply(rgb);
-            }
-            if (!IsExcludeType(typeof(ColorSlider), excludeField1, excludeField2))
-            {
-                colorSlider.Apply(rgb);
-            }
-            if (!IsExcludeType(typeof(ColorViewer), excludeField1, excludeField2))
-            {
-                colorViewer.ApplyNewColor(rgb);
-            }
+                hsv.x = hue;
+                ApplyOnChangedColorSlider(hsv);
+            }).AddTo(this);
+            
+            //
+            // ColorViewer(イベント無し)
+            //
+            
         }
-        
-        private bool IsExcludeType(Type excludeType, Object field1, Object field2 = null)
+
+        private void ApplyOnChangedParameterRGB(Color color)
         {
-            if (excludeType == null)
-            {
-                return false;
-            }
+            var hsv = color.RGBToHSV();
+            colorViewer.ApplyNewColor(color);
+            colorPanel.Apply(hsv);
+            colorSlider.Apply(hsv.x);
+            parameterHSV.Apply(hsv);
+        }
 
-            if (field1 != null)
-            {
-                var fieldType = field1.GetType();
-                if (excludeType == fieldType)
-                {
-                    return true;
-                }   
-            }
+        private void ApplyOnChangedParameterHSV(Vector3 hsv)
+        {
+            var color = hsv.ToColor();
+            colorViewer.ApplyNewColor(color);
+            colorPanel.Apply(hsv);
+            colorSlider.Apply(hsv.x);
+            parameterRGB.Apply(color);   
+        }
 
-            if (field2 != null)
-            {
-                var field2Type = field2.GetType();
-                if (excludeType == field2Type)
-                {
-                    return true;
-                }   
-            }
+        private void ApplyOnChangedColorPanel(Vector3 hsv)
+        {
+            var color = hsv.ToColor();
+            colorViewer.ApplyNewColor(color);
+            parameterRGB.Apply(color);
+            parameterHSV.Apply(hsv);
+        }
 
-            return false;
+        private void ApplyOnChangedColorSlider(Vector3 hsv)
+        {
+            var color = hsv.ToColor();
+            colorViewer.ApplyNewColor(color);
+            colorPanel.Apply(hsv);
+            parameterRGB.Apply(color);
+            parameterHSV.Apply(hsv);
         }
     }
 }

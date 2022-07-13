@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -21,9 +20,6 @@ namespace ColorPicker.Scripts
         public ReactiveProperty<float> OnEditB => onEditB;
         private ReactiveProperty<float> onEditB = new ReactiveProperty<float>();
         
-        // 入力してApplyが呼ばれた場合はテキストを更新しない.
-        private bool input = false;
-
         private void Start()
         {
             Initialize(inputFieldR, onEditR, ColorPickerDefine.RGB_MIN, ColorPickerDefine.RGB_MAX);
@@ -38,36 +34,68 @@ namespace ColorPicker.Scripts
                 // 数値か？.
                 if(int.TryParse(value, out var intValue))
                 {
-                    input = true;
                     intValue = Mathf.Clamp(intValue, min, max);
                     // Clampした結果を文字に反映.
                     inputField.SetTextWithoutNotify(intValue.ToString());
                     // 0~1.
                     var value01 = (float)intValue / max;
-                    onEdit.Value = value01;
+                    onEdit.SetValueAndForceNotify(value01);
                 }
                 else
                 {
                     Debug.LogWarning("ParameterRGB : Invalid parameter.");
+                    
                 }
             }).AddTo(this);
         }
 
-        public void Apply(Vector3 rgb)
+        /// <summary>
+        /// 一括適用.
+        /// </summary>
+        /// <param name="color"></param>
+        public void Apply(Color color)
         {
-            if (input)
-            {
-                input = false;
-                return;
-            }
-            
-            var r = (int)(rgb.x * ColorPickerDefine.RGB_MAX);
-            var g = (int)(rgb.y * ColorPickerDefine.RGB_MAX);
-            var b = (int)(rgb.z * ColorPickerDefine.RGB_MAX);
+            ApplyR(color.r);
+            ApplyG(color.g);
+            ApplyB(color.b);
+        }
+        
+        /// <summary>
+        /// R適用.
+        /// </summary>
+        /// <param name="r"></param>
+        public void ApplyR(float r)
+        {
+            //onEditR.Value = r;
+            ApplyText(r, inputFieldR, ColorPickerDefine.RGB_MAX);
+        }
 
-            inputFieldR.SetTextWithoutNotify(r.ToString());
-            inputFieldG.SetTextWithoutNotify(g.ToString());
-            inputFieldB.SetTextWithoutNotify(b.ToString());
+        /// <summary>
+        /// G適用.
+        /// </summary>
+        /// <param name="g"></param>
+        public void ApplyG(float g)
+        {
+            //onEditG.Value = g;
+            ApplyText(g, inputFieldG, ColorPickerDefine.RGB_MAX);
+        }
+        
+        /// <summary>
+        /// B適用
+        /// </summary>
+        /// <param name="b"></param>
+        public void ApplyB(float b)
+        {
+            //onEditB.Value = b;
+            ApplyText(b, inputFieldB, ColorPickerDefine.RGB_MAX);
+        }
+
+        private void ApplyText(float value, TMP_InputField inputField, int max)
+        {
+            value = Mathf.Clamp01(value);
+            // 文字列に反映.
+            var intValue = (int)(value * max);
+            inputField.SetTextWithoutNotify(intValue.ToString());
         }
     }
 }

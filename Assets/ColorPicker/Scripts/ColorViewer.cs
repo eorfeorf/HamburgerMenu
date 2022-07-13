@@ -19,14 +19,14 @@ namespace ColorPicker.Scripts
             nowColor.material = new Material(originalMaterial);
         }
 
-        public void ApplyNewColor(Vector3 rgb)
+        public void ApplyNewColor(Color color)
         {
-            newColor.material.SetColor("_RGB", new Color(rgb.x,rgb.y,rgb.z, 1f));
+            newColor.material.SetColor("_RGB", color);
         }
 
-        public void ApplyNowColor(Vector3 rgb)
+        public void ApplyNowColor(Color color)
         {
-            nowColor.material.SetColor("_RGB", new Color(rgb.x,rgb.y,rgb.z, 1f));
+            nowColor.material.SetColor("_RGB", color);
         }
     }
 }
