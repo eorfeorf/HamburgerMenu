@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3518712755486378912}
-  - component: {fileID: 3358086422056800206}
+  - component: {fileID: 7630396101496183578}
   m_Layer: 0
-  m_Name: HSV
+  m_Name: ParameterRGB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3358086422056800206
+--- !u!114 &7630396101496183578
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -49,12 +49,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3518712755486378911}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f27635a03ffdf8a44a9aceb986c15a07, type: 3}
+  m_Script: {fileID: 11500000, guid: fda5eed63d72c2341aa8cf3780b940b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputFieldH: {fileID: 1148755322690522014}
-  inputFieldS: {fileID: 1148755323913544836}
-  inputFieldV: {fileID: 1148755323156876101}
+  inputFieldR: {fileID: 1148755322690522014}
+  inputFieldG: {fileID: 1148755323913544836}
+  inputFieldB: {fileID: 1148755323156876101}
 --- !u!1001 &3518712754660093594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64,23 +64,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 116663484314951116, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: InputField H
-      objectReference: {fileID: 0}
-    - target: {fileID: 1598969105814796805, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
-      propertyPath: m_text
-      value: 'H :'
-      objectReference: {fileID: 0}
-    - target: {fileID: 2353752037266729795, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
-      propertyPath: m_text
-      value: "\xB0"
+      value: InputField R
       objectReference: {fileID: 0}
     - target: {fileID: 3910791502496271189, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: H
+      value: R
       objectReference: {fileID: 0}
     - target: {fileID: 5417388476407500205, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7936747866464933918, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -88,7 +80,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8385891527827651635, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44
+      value: 47
       objectReference: {fileID: 0}
     - target: {fileID: 9014608267820009262, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Pivot.x
@@ -201,19 +193,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 116663484314951116, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: InputField S
+      value: InputField G
       objectReference: {fileID: 0}
     - target: {fileID: 1598969105814796805, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_text
-      value: 'S :'
+      value: 'G :'
       objectReference: {fileID: 0}
     - target: {fileID: 3910791502496271189, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: S
+      value: G
       objectReference: {fileID: 0}
     - target: {fileID: 5417388476407500205, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7936747866464933918, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -334,19 +326,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 116663484314951116, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: InputField V
+      value: InputField B
       objectReference: {fileID: 0}
     - target: {fileID: 1598969105814796805, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_text
-      value: 'V :'
+      value: 'B :'
       objectReference: {fileID: 0}
     - target: {fileID: 3910791502496271189, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_Name
-      value: V
+      value: B
       objectReference: {fileID: 0}
     - target: {fileID: 5417388476407500205, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7936747866464933918, guid: 9a7bea3505cca9142b0f9f2f343949aa, type: 3}
       propertyPath: m_AnchoredPosition.x

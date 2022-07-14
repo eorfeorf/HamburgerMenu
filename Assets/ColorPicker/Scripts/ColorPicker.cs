@@ -9,6 +9,8 @@ namespace ColorPicker.Scripts
     public class ColorPicker : MonoBehaviour
     {
         [SerializeField]
+        private Buttons buttons;
+        [SerializeField]
         private ColorViewer colorViewer;
         [SerializeField]
         private ColorPanel colorPanel;
@@ -19,15 +21,37 @@ namespace ColorPicker.Scripts
         [SerializeField]
         private ParameterHSV parameterHSV;
 
-        // 外部用の最終的に決まった色.
-        public IReadOnlyReactiveProperty<Color> FixColor => fixColor;
-        private ReactiveProperty<Color> fixColor = new ReactiveProperty<Color>();
-    
+        
+        public IReadOnlyReactiveProperty<(Color newColor, Color nowColor)> OnClose => onClose;
+        private ReactiveProperty<(Color newColor, Color nowColor)> onClose = new ReactiveProperty<(Color, Color)>();
+        public IReadOnlyReactiveProperty<Color> OnSave => onSave;
+        private ReactiveProperty<Color> onSave = new ReactiveProperty<Color>();
+        public IReadOnlyReactiveProperty<Color> OnCancel => onCancel;
+        private ReactiveProperty<Color> onCancel = new ReactiveProperty<Color>();
+        public IReadOnlyReactiveProperty<Color> OnChanged => onChanged;
+        private ReactiveProperty<Color> onChanged = new ReactiveProperty<Color>();
+
         private Vector3 hsv = Vector3.one;
-        private float alpha;
+        private Vector3 prevHsv = Vector3.one;
         
         private void Start()
         {
+            //
+            // Buttons
+            //
+            buttons.OnClose.Subscribe(_ =>
+            {
+                onClose.SetValueAndForceNotify((hsv.ToColor(), prevHsv.ToColor()));
+            }).AddTo(this);
+            buttons.OnSave.Subscribe(_ =>
+            {
+                onSave.SetValueAndForceNotify(hsv.ToColor());
+            }).AddTo(this);
+            buttons.OnCancel.Subscribe(_ =>
+            {
+                onCancel.SetValueAndForceNotify(prevHsv.ToColor());
+            }).AddTo(this);
+            
             //
             // ParameterRGB
             //
@@ -97,9 +121,9 @@ namespace ColorPicker.Scripts
             
         }
 
-        private void ApplyFixColor(Vector3 hsv)
+        private void ChangeColor(Vector3 hsv)
         {
-            fixColor.Value = hsv.ToColor();
+            onChanged.Value = hsv.ToColor();
         }
 
         private void ApplyOnChangedParameterRGB(Color color)
@@ -109,7 +133,7 @@ namespace ColorPicker.Scripts
             colorPanel.Apply(hsv);
             colorSlider.Apply(hsv.x);
             parameterHSV.Apply(hsv);
-            ApplyFixColor(hsv);
+            ChangeColor(hsv);
         }
 
         private void ApplyOnChangedParameterHSV(Vector3 hsv)
@@ -119,7 +143,7 @@ namespace ColorPicker.Scripts
             colorPanel.Apply(hsv);
             colorSlider.Apply(hsv.x);
             parameterRGB.Apply(color);
-            ApplyFixColor(hsv);
+            ChangeColor(hsv);
         }
 
         private void ApplyOnChangedColorPanel(Vector3 hsv)
@@ -128,7 +152,7 @@ namespace ColorPicker.Scripts
             colorViewer.ApplyNewColor(color);
             parameterRGB.Apply(color);
             parameterHSV.Apply(hsv);
-            ApplyFixColor(hsv);
+            ChangeColor(hsv);
         }
 
         private void ApplyOnChangedColorSlider(Vector3 hsv)
@@ -138,7 +162,12 @@ namespace ColorPicker.Scripts
             colorPanel.Apply(hsv);
             parameterRGB.Apply(color);
             parameterHSV.Apply(hsv);
-            ApplyFixColor(hsv);
+            ChangeColor(hsv);
+        }
+
+        public void OnEnable()
+        {
+            prevHsv = hsv;
         }
     }
 }
