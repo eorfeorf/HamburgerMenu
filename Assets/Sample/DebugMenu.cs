@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UniRx;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,12 @@ namespace Sample
 
         [SerializeField]
         private Button closeButton;
+
+        [SerializeField]
+        private ColorPicker.Scripts.ColorPicker colorPicker;
+
+        [SerializeField]
+        private RawImage image;
         
         enum Test
         {
@@ -38,21 +45,50 @@ namespace Sample
         private int[] ary2 = {
             0, 1, 2
         };
-        
+
+        private void Awake()
+        {
+            
+        }
+
         private void Start()
         {
             openButton.onClick.AsObservable().Subscribe(_ =>
             {
+                hamburgerMenu.gameObject.SetActive(true);
                 hamburgerMenu.ShowAll();
             }).AddTo(this);
-            
             closeButton.onClick.AsObservable().Subscribe(_ =>
             {
+                hamburgerMenu.gameObject.SetActive(false);
                 hamburgerMenu.HideAll();
             }).AddTo(this);
+
+            colorPicker.OnSave.SkipLatestValueOnSubscribe().Subscribe(x =>
+            {
+                image.color = x;
+            }).AddTo(this);
+            colorPicker.OnCancel.SkipLatestValueOnSubscribe().Subscribe(x =>
+            {
+                image.color = x;
+            }).AddTo(this);
+            colorPicker.OnClose.SkipLatestValueOnSubscribe().Subscribe(x =>
+            {
+                image.color = x.nowColor;
+            }).AddTo(this);
+            colorPicker.OnChanged.SkipLatestValueOnSubscribe().Subscribe(x =>
+            {
+                image.color = x;
+            }).AddTo(this);
+            colorPicker.gameObject.SetActive(false);
             
             hamburgerMenu.Initialize();
-            
+
+            hamburgerMenu.AddToggle("ColorPicker",false).Subscribe(x =>
+            {
+                colorPicker.gameObject.SetActive(x);
+            }).AddTo(this);
+            return;
             hamburgerMenu.AddSliderInt("int",10, 0, 50, 10).Subscribe(x =>
             {
                 Debug.Log("slider int: " + x);
